@@ -1,0 +1,11 @@
+{
+    "RoslynExtensionsOptions": {
+        "EnableAnalyzersSupport": true,
+        "LocationPaths": [
+            "{{HOME}}/.vscode/extensions/josefpihrt-vscode.roslynator-4.4.0/roslyn/common",
+            "{{HOME}}/.vscode/extensions/josefpihrt-vscode.roslynator-4.4.0/roslyn/analyzers",
+            "{{HOME}}/.vscode/extensions/josefpihrt-vscode.roslynator-4.4.0/roslyn/refactorings",
+            "{{HOME}}/.vscode/extensions/josefpihrt-vscode.roslynator-4.4.0/roslyn/fixes"
+        ]
+    }
+}
