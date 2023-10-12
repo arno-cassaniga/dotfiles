@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+unset is_undo
 dirlist=(
 	"./Calibre Library:$HOME/Calibre Library"
 	"./.cargo:$HOME/.cargo"
@@ -17,8 +18,9 @@ dirlist=(
 	"./vbox-vms:$HOME/vbox-vms"
 )
 
-for i in ${!dirlist[@]}; do
-	IFS=":" read -r dir_from dir_to <<< "${dirlist[$i]}"
+make_link() {
+	local dir_from="$(realpath "$1")"
+	local dir_to="$2"
 
 	#is it already a symlink?
 	if [[ -L "$dir_to" ]]; then
@@ -30,6 +32,37 @@ for i in ${!dirlist[@]}; do
 	else
 		ln -s "$dir_from" "$dir_to"
 		echo "[LINKED] $dir_to -> $dir_from"
+	fi
+}
+
+undo_link() {
+	local dir_from="$1"
+	local dir_to="$2"
+
+	#checks if it is a symlink
+	if [[ -L "$dir_to" ]]; then
+		rm "$dir_to"
+		echo "[UNLINKED] $dir_to"
+	else
+		echo "[NOT A LINK] $dir_to"
+	fi
+}
+
+while getopts 'u' opt ; do
+	case "$opt" in
+		u)
+			is_undo=y
+			;;
+	esac
+done
+
+for i in ${!dirlist[@]}; do
+	IFS=":" read -r dir_from dir_to <<< "${dirlist[$i]}"
+
+	if [[ "$is_undo" == "y" ]]; then
+		undo_link "$dir_from" "$dir_to"
+	else
+		make_link "$dir_from" "$dir_to"
 	fi
 done
 
